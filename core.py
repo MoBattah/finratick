@@ -28,15 +28,12 @@ for line in csvfile:
 # RobinHood API
 rh = urllib.urlopen(
     'https://api.robinhood.com/prices/?delayed=false&source=nls&symbols=' + ",".join(map(str, x)).replace(' ', '+'))
+s = 1
 
-# Below line works. Now onto creating a line which does this automatically.
-
-# This must be done automatically, not manually 
-str_rh = urllib.urlopen('https://api.robinhood.com/prices/?delayed=false&source=nls&symbols=NIHD,FCEL,NAO,AAPL,GSOL').read().decode(
-
-    'UTF-8')
-jsonfile = json.loads(str_rh)
-
+while s < len(x):
+    print(urllib.urlopen('https://api.robinhood.com/prices/?delayed=false&source=nls&symbols=' + x[s]).read().decode(
+        'UTF-8'))
+    s = s + 1
 
 #filter for $2 price point -- WORKING
 for i, symbol in enumerate(jsonfile['results']):
