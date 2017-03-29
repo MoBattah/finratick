@@ -27,8 +27,13 @@ for line in csvfile:
 
 # RobinHood API
 rh = urllib.urlopen('https://api.robinhood.com/prices/?delayed=false&source=nls&symbols=' + ",".join(map(str, x)).replace(' ','+'))
-jsonfile = json.load(rh)
+
+#Below line works. Now onto creating a line which does this automatically.
+#str_rh = urllib.urlopen('https://api.robinhood.com/prices/?delayed=false&source=nls&symbols=FCEL').read().decode('UTF-8')
+
+str_rh = urllib.urlopen('https://api.robinhood.com/prices/?delayed=false&source=nls&symbols=' + ",".join(map(str, x)).replace(' ', '+'))
+
+jsonfile = json.loads(str_rh)
 for i, symbol in enumerate(jsonfile['results']):
     if symbol and float(symbol['price']) <= 2.00:
         print('%s @ $%s' % (x[i], symbol['price']))
-        
