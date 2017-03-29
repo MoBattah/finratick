@@ -4,7 +4,7 @@ import urllib.request as urllib
 import codecs
 import json
 
-# To test against the recent changes, use these 3 lines:
+# To test against the recent changes, use these 3 lines:   **Should be testing against recent changes** But not
 # finra = 'http://tsp.finra.org/finra_org/ticksizepilot/TSPilotChanges.txt'
 # col_program = 7
 # col_symbol = 1
@@ -31,10 +31,14 @@ rh = urllib.urlopen(
 
 # Below line works. Now onto creating a line which does this automatically.
 
-str_rh = urllib.urlopen('https://api.robinhood.com/prices/?delayed=false&source=nls&symbols=NIHD,FCEL,NAO').read().decode(
+# This must be done automatically, not manually 
+str_rh = urllib.urlopen('https://api.robinhood.com/prices/?delayed=false&source=nls&symbols=NIHD,FCEL,NAO,AAPL,GSOL').read().decode(
+
     'UTF-8')
 jsonfile = json.loads(str_rh)
 
+
+#filter for $2 price point -- WORKING
 for i, symbol in enumerate(jsonfile['results']):
     if symbol and float(symbol['price']) <= 2.00:
         print('%s @ $%s' % (x[i], symbol['price']))
