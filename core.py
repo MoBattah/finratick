@@ -4,7 +4,7 @@ import urllib.request as urllib
 import codecs
 import json
 
-# If you want to test against the recent changes, use these 3 lines:
+# To test against the recent changes, use these 3 lines:
 #finra = 'http://tsp.finra.org/finra_org/ticksizepilot/TSPilotChanges.txt'
 #col_program = 7
 #col_symbol = 1
