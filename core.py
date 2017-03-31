@@ -31,16 +31,17 @@ rh = urllib.urlopen(
 s = 1
 
 while s < len(x):
+
     try:
         print(urllib.urlopen('https://api.robinhood.com/prices/?delayed=false&source=nls&symbols=' + x[s]).read().decode(
         'UTF-8'))
+        s += 1
         #exceptions are going to keep getting thrown  here due to the txt file being not uniform
     except urllib.HTTPError:
-        s = s + 2
+        s += 2
         print(urllib.urlopen('https://api.robinhood.com/prices/?delayed=false&source=nls&symbols=' + x[s]).read().decode(
             'UTF-8'))
-
-    s = s + 1
+        s += 2
 
 #filter for $2 price point -- WORKING
 for i, symbol in enumerate(jsonfile['results']):
