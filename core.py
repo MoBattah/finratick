@@ -39,11 +39,12 @@ while s < len(x):
         #exceptions are going to keep getting thrown  here due to the txt file being not uniform
     except urllib.HTTPError:
         s += 5
-        print(urllib.urlopen('https://api.robinhood.com/prices/?delayed=false&source=nls&symbols=' + x[s]).read().decode(
+        if s > (len(x)-5):
+            break
+        else:
+            print(urllib.urlopen('https://api.robinhood.com/prices/?delayed=false&source=nls&symbols=' + x[s]).read().decode(
             'UTF-8'))
-        s += 5
-    except:
-        break
+
 
 #filter for $2 price point -- WORKING
 for i, symbol in enumerate(jsonfile['results']):
