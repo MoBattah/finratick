@@ -7,7 +7,7 @@ rh = 'https://api.robinhood.com/prices/?delayed=false&source=nls&symbols='
 
 # process securities list
 tf = list(map(lambda x: x.strip(), open(argv[1]).readlines()))[1:-1]
-tf = list(filter(lambda x: '|G2' in x or '|G3' in x, tf))
+tf = list(filter(lambda x: '|G1' in x or '|G2' in x or '|G3' in x, tf))
 tf = list(map(lambda x: x.split('|')[0], tf))
 
 # get price by ticker
@@ -18,4 +18,4 @@ tickers = sorted(tickers, key=lambda t: float(t[1]), reverse=True)
 for ticker in tickers:
     print(ticker[0] + ': ' + ticker[1])
 
-#Stolen from QLYoung but he will never see this so it does not matter.
+    
