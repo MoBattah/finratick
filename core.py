@@ -1,21 +1,50 @@
 #!/usr/bin/python3
+import sys
 import requests
-import json
-from sys import argv
 
-rh = 'https://api.robinhood.com/prices/?delayed=false&source=nls&symbols='
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: {} <filename>".format(sys.argv[0]))
+        sys.exit(1)
 
-# process securities list
-tf = list(map(lambda x: x.strip(), open(argv[1]).readlines()))[1:-1]
-tf = list(filter(lambda x: '|G1' in x or '|G2' in x or '|G3' in x, tf))
-tf = list(map(lambda x: x.split('|')[0], tf))
-
-# get price by ticker
-tickers = list(zip(tf, map(lambda x: x['price'] if x is not None else None, requests.get(rh + ','.join(tf)).json()['results'])))
-tickers = filter(lambda x: x[1] is not None, tickers)
-tickers = sorted(tickers, key=lambda t: float(t[1]), reverse=True)
-
-for ticker in tickers:
-    print(ticker[0] + ': ' + ticker[1])
-
+    filename = sys.argv[1]
     
+    # Read the file, stripping whitespace and skipping first and last lines
+    with open(filename) as file:
+        lines = [line.strip() for line in file][1:-1]
+
+    # Filter lines that contain any of the specified tags
+    valid_lines = [
+        line for line in lines
+        if any(tag in line for tag in ('|G1', '|G2', '|G3'))
+    ]
+    
+    # Extract ticker symbols (assumes ticker is the text before the first '|')
+    tickers = [line.split('|')[0] for line in valid_lines]
+    
+    # Prepare API request
+    api_url = (
+        "https://api.robinhood.com/prices/?delayed=false&source=nls&symbols="
+        + ",".join(tickers)
+    )
+    
+    response = requests.get(api_url)
+    response.raise_for_status()  # Raise an error for bad responses
+    data = response.json()
+    
+    # Zip ticker symbols with their corresponding prices
+    ticker_prices = [
+        (ticker, result.get('price'))
+        for ticker, result in zip(tickers, data.get('results', []))
+        if result.get('price') is not None
+    ]
+    
+    # Sort tickers by price in descending order
+    ticker_prices.sort(key=lambda x: float(x[1]), reverse=True)
+    
+    # Print the results
+    for ticker, price in ticker_prices:
+        print(f"{ticker}: {price}")
+
+if __name__ == "__main__":
+    main()
